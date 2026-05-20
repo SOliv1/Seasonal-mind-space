@@ -1,9 +1,11 @@
+import type { PointerEvent } from "react";
+import type { MindMapNode } from "../state/mindmapStore";
 import { useMindMapStore } from "../state/mindmapStore";
 
-export function useDrag(node) {
+export function useDrag(node: MindMapNode) {
   const updateNode = useMindMapStore((s) => s.updateNode);
 
-  const handlePointerDown = (e: React.PointerEvent) => {
+  const handlePointerDown = (e: PointerEvent<HTMLDivElement>) => {
     e.stopPropagation();
     const startX = e.clientX;
     const startY = e.clientY;
@@ -11,7 +13,7 @@ export function useDrag(node) {
     const initialX = node.x;
     const initialY = node.y;
 
-    const handlePointerMove = (moveEvent) => {
+    const handlePointerMove = (moveEvent: globalThis.PointerEvent) => {
       const dx = moveEvent.clientX - startX;
       const dy = moveEvent.clientY - startY;
 

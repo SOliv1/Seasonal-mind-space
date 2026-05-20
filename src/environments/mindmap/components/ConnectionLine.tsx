@@ -1,6 +1,11 @@
+import type { MindMapConnection } from "../state/mindmapStore";
 import { useMindMapStore } from "../state/mindmapStore";
 
-export default function ConnectionLine({ connection }) {
+interface ConnectionLineProps {
+  connection: MindMapConnection;
+}
+
+export default function ConnectionLine({ connection }: ConnectionLineProps) {
   const nodes = useMindMapStore((s) => s.nodes);
 
   const from = nodes.find((n) => n.id === connection.from);
@@ -17,7 +22,7 @@ export default function ConnectionLine({ connection }) {
 
   return (
     <svg className="connection-line">
-      <path d={path} stroke="rgba(0,0,0,0.2)" strokeWidth="2" fill="none" />
+      <path className="connection-path" d={path} />
     </svg>
   );
 }
