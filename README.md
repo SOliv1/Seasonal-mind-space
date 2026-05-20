@@ -1,6 +1,6 @@
 # React + TypeScript + Vite
 
-[![Deploy to GitHub Pages](https://github.com/SOliv1/Seasonal-mind-space/actions/workflows/deploy.yml/badge.svg)](https://github.com/SOliv1/Seasonal-mind-space/actions/workflows/deploy.yml)
+[![Deploy to GitHub Pages](https://github.com/SOliv1/Seasonal-mind-space/actions/workflows/deploy.yml/badge.svg)](https://github.com/SOliv1/Seasonal-mind-space/actions/workflows/deploy.yml) [![pages-build-deployment](https://github.com/SOliv1/Seasonal-mind-space/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/SOliv1/Seasonal-mind-space/actions/workflows/pages/pages-build-deployment)
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
