@@ -18,11 +18,13 @@ export interface MindMapConnection {
 export interface MindMapStore {
   nodes: MindMapNode[];
   connections: MindMapConnection[];
+  connectionMode: boolean;
   pendingConnectionStart: string | null;
   focusedNode: string | null;
   season: SeasonName;
   calmMode: boolean;
 
+  toggleConnectionMode: () => void;
   startConnection: (nodeId: string) => void;
   completeConnection: (targetNodeId: string) => void;
   cancelConnection: () => void;
@@ -39,17 +41,49 @@ export interface MindMapStore {
 export const useMindMapStore = create<MindMapStore>((set) => ({
   nodes: [],
   connections: [],
+  connectionMode: false,
   pendingConnectionStart: null,
   focusedNode: null,
   season: "spring",
   calmMode: false,
 
+  toggleConnectionMode: () =>
+    set((state) => ({
+      connectionMode: !state.connectionMode,
+      pendingConnectionStart: null,
+    })),
+
   startConnection: (nodeId) =>
-    set({ pendingConnectionStart: nodeId }),
+    set({
+      connectionMode: true,
+      pendingConnectionStart: nodeId,
+    }),
 
   completeConnection: (targetNodeId) =>
     set((state) => {
       if (!state.pendingConnectionStart) return state;
+      if (state.pendingConnectionStart === targetNodeId) {
+        return {
+          ...state,
+          pendingConnectionStart: null,
+        };
+      }
+
+      const connectionExists = state.connections.some(
+        (connection) =>
+          (connection.from === state.pendingConnectionStart &&
+            connection.to === targetNodeId) ||
+          (connection.from === targetNodeId &&
+            connection.to === state.pendingConnectionStart)
+      );
+
+      if (connectionExists) {
+        return {
+          ...state,
+          connectionMode: false,
+          pendingConnectionStart: null,
+        };
+      }
 
       const newConnection: MindMapConnection = {
         id: (Math.random() + 1).toString(36).substring(2),
@@ -60,12 +94,13 @@ export const useMindMapStore = create<MindMapStore>((set) => ({
 
       return {
         connections: [...state.connections, newConnection],
+        connectionMode: false,
         pendingConnectionStart: null,
       };
     }),
 
   cancelConnection: () =>
-    set({ pendingConnectionStart: null }),
+    set({ connectionMode: false, pendingConnectionStart: null }),
 
   setFocusedNode: (id) =>
     set({ focusedNode: id }),
@@ -89,6 +124,7 @@ export const useMindMapStore = create<MindMapStore>((set) => ({
     set({
       nodes: [],
       connections: [],
+      connectionMode: false,
       pendingConnectionStart: null,
       focusedNode: null,
       season: "spring",
@@ -98,6 +134,7 @@ export const useMindMapStore = create<MindMapStore>((set) => ({
   calm: () =>
     set((state) => ({
       focusedNode: null,
+      connectionMode: false,
       pendingConnectionStart: null,
       calmMode: !state.calmMode,
     })),

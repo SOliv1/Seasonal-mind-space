@@ -13,15 +13,22 @@ export default function ConnectionLine({ connection }: ConnectionLineProps) {
 
   if (!from || !to) return null;
 
-  const x1 = from.x + 80; // approximate center of node
-  const y1 = from.y + 20;
-  const x2 = to.x + 80;
-  const y2 = to.y + 20;
+  const nodeWidth = 192;
+  const nodeHeight = 48;
+  const fromIsLeft = from.x <= to.x;
+  const x1 = from.x + (fromIsLeft ? nodeWidth : 0);
+  const y1 = from.y + nodeHeight / 2;
+  const x2 = to.x + (fromIsLeft ? 0 : nodeWidth);
+  const y2 = to.y + nodeHeight / 2;
+  const controlOffset = Math.max(56, Math.abs(x2 - x1) * 0.42);
 
-  const path = `M ${x1} ${y1} C ${x1} ${y2}, ${x2} ${y1}, ${x2} ${y2}`;
+  const path = fromIsLeft
+    ? `M ${x1} ${y1} C ${x1 + controlOffset} ${y1}, ${x2 - controlOffset} ${y2}, ${x2} ${y2}`
+    : `M ${x1} ${y1} C ${x1 - controlOffset} ${y1}, ${x2 + controlOffset} ${y2}, ${x2} ${y2}`;
 
   return (
     <svg className="connection-line">
+      <path className="connection-path connection-path-outline" d={path} />
       <path className="connection-path" d={path} />
     </svg>
   );

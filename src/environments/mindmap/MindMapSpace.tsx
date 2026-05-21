@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import Canvas from "./components/Canvas";
 import ControlsBar from "./components/ControlsBar";
 import { calmPalette } from "./colors/calmPalette";
@@ -6,6 +6,7 @@ import { seasonPalettes, type SeasonName } from "./colors/seasonPalettes";
 import { useMindMapStore } from "./state/mindmapStore";
 
 type CSSVarStyle = CSSProperties & Record<`--${string}`, string>;
+const heroOrbSrc = `${import.meta.env.BASE_URL}assets/hero-orb.png`;
 
 const seasonalTaglines: Record<SeasonName, string> = {
   spring: "Soft renewal",
@@ -14,11 +15,47 @@ const seasonalTaglines: Record<SeasonName, string> = {
   winter: "Quiet clarity",
 };
 
+const connectionTheme: Record<
+  SeasonName | "calm",
+  {
+    tint: string;
+    outline: string;
+    text: string;
+  }
+> = {
+  spring: {
+    tint: "#0B4F3A",
+    outline: "#F7FFF9",
+    text: "#FFFFFF",
+  },
+  summer: {
+    tint: "#053B57",
+    outline: "#FFF8D6",
+    text: "#FFFFFF",
+  },
+  autumn: {
+    tint: "#FFF4D8",
+    outline: "#3B170D",
+    text: "#2B120A",
+  },
+  winter: {
+    tint: "#123A5A",
+    outline: "#F7FBFF",
+    text: "#FFFFFF",
+  },
+  calm: {
+    tint: "#22324A",
+    outline: "#FFFFFF",
+    text: "#FFFFFF",
+  },
+};
+
 function buildPaletteStyle(season: SeasonName, calmMode: boolean): CSSVarStyle {
   const palette = seasonPalettes[season];
   const colors = calmMode ? calmPalette.primary : palette.colors;
   const accents = calmMode ? calmPalette.accents : palette.colors;
   const glow = calmMode ? calmPalette.glow : palette.glow;
+  const connect = connectionTheme[calmMode ? "calm" : season];
   const headerTextColor = "#ffffff";
   const nodeTextColor = "#1f2f3a";
 
@@ -35,7 +72,9 @@ function buildPaletteStyle(season: SeasonName, calmMode: boolean): CSSVarStyle {
       "--node-border": `${calmPalette.primary[0]}aa`,
       "--node-shadow": `${calmPalette.primary[2]}55`,
       "--node-text": nodeTextColor,
-      "--connection-tint": `${calmPalette.primary[1]}dd`,
+      "--connection-tint": connect.tint,
+      "--connection-outline": connect.outline,
+      "--connection-text": connect.text,
       "--controls-bg": `${calmPalette.accents[3]}cc`,
       "--controls-border": `${calmPalette.accents[0]}99`,
       "--season-title": headerTextColor,
@@ -55,7 +94,9 @@ function buildPaletteStyle(season: SeasonName, calmMode: boolean): CSSVarStyle {
       "--node-border": `${colors[0]}cc`,
       "--node-shadow": `${colors[0]}66`,
       "--node-text": nodeTextColor,
-      "--connection-tint": `${colors[4]}dd`,
+      "--connection-tint": connect.tint,
+      "--connection-outline": connect.outline,
+      "--connection-text": connect.text,
       "--controls-bg": `${colors[2]}cc`,
       "--controls-border": `${colors[0]}99`,
       "--season-title": headerTextColor,
@@ -73,7 +114,9 @@ function buildPaletteStyle(season: SeasonName, calmMode: boolean): CSSVarStyle {
     "--node-border": `${colors[0]}aa`,
     "--node-shadow": `${colors[0]}55`,
     "--node-text": nodeTextColor,
-    "--connection-tint": `${colors[1]}cc`,
+    "--connection-tint": connect.tint,
+    "--connection-outline": connect.outline,
+    "--connection-text": connect.text,
     "--controls-bg": `${accents[3]}cc`,
     "--controls-border": `${colors[0]}88`,
     "--season-title": headerTextColor,
@@ -85,18 +128,44 @@ export default function MindMapSpace() {
   const season = useMindMapStore((s) => s.season);
   const focusedNode = useMindMapStore((s) => s.focusedNode);
   const calmMode = useMindMapStore((s) => s.calmMode);
-  const className = `mindmap-space season-${season}${calmMode ? " calm-mode" : ""}${focusedNode ? " focus-mode" : ""}`;
+  const connectionMode = useMindMapStore((s) => s.connectionMode);
+  const className = `mindmap-space season-${season}${calmMode ? " calm-mode" : ""}${focusedNode ? " focus-mode" : ""}${connectionMode ? " connection-mode" : ""}`;
   const paletteStyle = buildPaletteStyle(season, calmMode);
   const title = calmMode ? calmPalette.name : seasonPalettes[season].name;
   const tagline = calmMode ? "Soft focus" : seasonalTaglines[season];
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 1800);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className={className} style={paletteStyle}>
-      <div className="mindmap-title">{title} Mindspace</div>
-      <div className="mindmap-subtitle">{tagline}</div>
+    <>
+      {showSplash && (
+        <div className="sms-splash-screen" aria-hidden="true">
+          <img
+            className="sms-splash-orb"
+            src={heroOrbSrc}
+            alt=""
+          />
+        </div>
+      )}
 
-      <Canvas />
-      <ControlsBar />
-    </div>
+      <div className={className} style={paletteStyle}>
+        <div className="hero-orb-mark" aria-hidden="true">
+          <img
+            className="hero-orb-logo"
+            src={heroOrbSrc}
+            alt=""
+          />
+        </div>
+        <div className="mindmap-title">{title} Mindspace</div>
+        <div className="mindmap-subtitle">{tagline}</div>
+
+        <Canvas />
+        <ControlsBar />
+      </div>
+    </>
   );
 }

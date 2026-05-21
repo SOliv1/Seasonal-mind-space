@@ -7,7 +7,16 @@ export default function Canvas() {
   const nodes = useMindMapStore((s) => s.nodes);
   const connections = useMindMapStore((s) => s.connections);
   const addNode = useMindMapStore((s) => s.addNode);
+  const setFocusedNode = useMindMapStore((s) => s.setFocusedNode);
+  const cancelConnection = useMindMapStore((s) => s.cancelConnection);
   const safeNodes = nodes ?? [];
+
+  const handleClick = (e: MouseEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+
+    setFocusedNode(null);
+    cancelConnection();
+  };
 
   const handleDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -17,7 +26,11 @@ export default function Canvas() {
   };
 
   return (
-    <div className="mindmap-canvas" onDoubleClick={handleDoubleClick}>
+    <div
+      className="mindmap-canvas"
+      onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+    >
       {connections.map((c) => (
         <ConnectionLine key={c.id} connection={c} />
       ))}
