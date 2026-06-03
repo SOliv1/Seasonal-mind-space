@@ -1,6 +1,7 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import Canvas from "./components/Canvas";
 import ControlsBar from "./components/ControlsBar";
+import MindMapFooter from "./components/MindMapFooter";
 import { calmPalette } from "./colors/calmPalette";
 import { seasonPalettes, type SeasonName } from "./colors/seasonPalettes";
 import { useMindMapStore } from "./state/mindmapStore";
@@ -164,19 +165,11 @@ export default function MindMapSpace() {
         <div className="mindmap-subtitle">{tagline}</div>
 
         <Canvas />
-        <ControlsBar />
-          <div
-            style={{
-              marginTop: "1.5rem",
-              fontSize: "0.75rem",
-              opacity: 0.6,
-              textAlign: "center",
-              letterSpacing: "0.3px"
-            }}
-          >
-            © 2026 Reflections in Light — Part of the Reflections in Light Family
-          </div>
 
+        <div className="controls-stack">
+          <ControlsBar />
+          <MindMapFooter />
+        </div>
       </div>
     </>
   );
