@@ -165,6 +165,18 @@ export default function MindMapSpace() {
 
         <Canvas />
         <ControlsBar />
+          <div
+            style={{
+              marginTop: "1.5rem",
+              fontSize: "0.75rem",
+              opacity: 0.6,
+              textAlign: "center",
+              letterSpacing: "0.3px"
+            }}
+          >
+            © 2026 Reflections in Light — Part of the Reflections in Light Family
+          </div>
+
       </div>
     </>
   );
