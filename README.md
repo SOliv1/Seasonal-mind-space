@@ -75,4 +75,4 @@ export default defineConfig([
   },
 ])
 ```
-# Spring-mind-space
+# Seasonal-mind-space
