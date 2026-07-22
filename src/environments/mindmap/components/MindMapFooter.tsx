@@ -2,8 +2,8 @@ const DAILY_REFLECTIONS_URL = "https://soliv1.github.io/Daily-Reflections-App/";
 const CENTRE_NOTES_URL = "https://centre-notes.netlify.app/";
 const SEASONAL_MIND_SPACE_URL = "https://soliv1.github.io/Seasonal-mind-space/";
 const SEASONAL_STUDIO_URL = "https://seasonal.studio/studio/about";
-const CINEMATIC_QUOTATIONS = "https://cinematic-quotations-evez.onrender.com/";
-const MOOD_LEXICON = "https://mood-lexicon-production.up.railway.app/";
+const MOOD_LEXICON_URL = "https://mood-lexicon-production.up.railway.app/";
+const CINEMATIC_QUOTATIONS_URL = "https://cinematic-quotations-evez.onrender.com/";
 
 function getReturnUrl() {
   if (typeof window === "undefined") {
